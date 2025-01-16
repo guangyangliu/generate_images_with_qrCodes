@@ -28,43 +28,37 @@ function QrDetail({qrDetail,handleQrDetail}) {
 }
 
 //take an imageSrc show an image with qrcode on it.
-function Canvas({imageSrc, mainCanvas}) {
-  useEffect(()=> {
-    if (mainCanvas.current && imageSrc) {
-    drawMainCanvas(mainCanvas,imageSrc)
-    }
-  },[imageSrc]);
-  return <canvas ref={mainCanvas} id="mainCanvas" width = '300' height= '300'> </canvas>
-}
-
-function drawMainCanvas(mainCanvas, imageSrc) {
-    let img = new Image();
-    img.src = imageSrc;
-    img.onload = ()=> {
-    const canvasContext = mainCanvas.current.getContext('2d');
-    mainCanvas.current.width = img.width;
-    mainCanvas.current.height = img.height;
-    canvasContext.drawImage(img, 0, 0, img.width, img.height);
-  }
-}
-
-function QrCode({urls, mainCanvas, qrDetail, imageSrc}) {
+function Canvas({imageSrc, urls, qrDetail}) {
+  const mainCanvas = useRef(null);
   const qrCodeCanvas = useRef(null);
-  useEffect(() => {
-    if(mainCanvas.current && urls) {
-      const mainContext = mainCanvas.current.getContext('2d');
-      mainContext.clearRect(0, 0, mainCanvas.current.width, mainCanvas.current.height);
-      drawMainCanvas(mainCanvas, imageSrc);
+  const urlsArray = urls.split('\n');
+
+  useEffect(()=> {
+    if (mainCanvas.current && (imageSrc || urls)) {
+      const canvasContext = mainCanvas.current.getContext('2d');
+      canvasContext.clearRect(0, 0, mainCanvas.current.width, mainCanvas.current.height);
+
+      const img = new Image();
+      img.src = imageSrc;
+
+      img.onload = ()=> {
+      mainCanvas.current.width = img.width;
+      mainCanvas.current.height = img.height;
+      canvasContext.drawImage(img, 0, 0, img.width, img.height);
+
       const qrCodeImage = new Image();
       qrCodeImage.src = qrCodeCanvas.current.toDataURL('image/png');
       qrCodeImage.onload = () => {
-        mainContext.drawImage(qrCodeImage, qrDetail.x, qrDetail.y, qrDetail.size, qrDetail.size);
+        canvasContext.drawImage(qrCodeImage, qrDetail.x, qrDetail.y, qrDetail.size, qrDetail.size);
       }
-      
+    };
     }
-  }, [urls, mainCanvas, qrDetail]);
-  const urlsArray = urls.split('\n');
-  return <QRCodeCanvas ref={qrCodeCanvas} value={urlsArray[0]} style={{display: 'none'}} />
+  },[imageSrc, urls, qrDetail]);
+
+  return <>
+  <canvas ref={mainCanvas} id="mainCanvas" width = '300' height= '300'> </canvas>
+  <QRCodeCanvas ref={qrCodeCanvas} value={urlsArray[0]} style={{display: 'none'}} />
+  </>
 }
 
 
@@ -86,9 +80,6 @@ const App = () => {
   const[imageSrc, setImageSrc] = useState('');
   const[urls, setUrls] = useState('');
   const[qrDetail, setQrDetail] = useState({x:0, y:0, size: 50});
-  console.log(qrDetail);
-  const mainCanvas = useRef(null);
-  //const [qrCodePosition, setQrCodePosition] = useState({x:0, y:0, width:100, height:100});
 
   function handleImage() {
     let imageInput = document.getElementById('imageInput');
@@ -124,8 +115,7 @@ const App = () => {
 
       const qrCode = new Image();
       qrCode.src = allQrCodeCanvas[0].toDataURL('image/png');
-      mainContext.drawImage(qrCode, 50, 50, qrCode.width, qrCode.height);
-
+      mainContext.drawImage(qrCode, qrDetail.x, qrDetail.y, qrDetail.size, qrDetail.size);
       results.push(mainCanvas.toDataURL('image/png'));
     }
 
@@ -152,8 +142,6 @@ const App = () => {
     }
   }
 
-  
-
   return (
     <div>
       <h1>Image with QR Code Generator</h1>
@@ -162,9 +150,8 @@ const App = () => {
       <UrlUpload handleUrl={handleUrl} url={urls}/>
       <br />
       <QrDetail handleQrDetail={handleQrDetail} qrDetail={qrDetail}/>
-      <Canvas imageSrc={imageSrc} mainCanvas={mainCanvas}/>
+      <Canvas imageSrc={imageSrc} urls={urls} qrDetail={qrDetail}/>
       <br />
-      <QrCode urls={urls}  mainCanvas={mainCanvas} qrDetail={qrDetail} imageSrc={imageSrc}/>
       <QrCodes urls={urls} />
       <br />
       <button onClick={handleDownload}>
