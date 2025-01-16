@@ -2,16 +2,90 @@
   box-sizing: border-box;
 }
 
+/* General styling */
 body {
   font-family: sans-serif;
-  margin: 20px;
-  padding: 0;
+  margin: 0;
+  padding: 10px;
+  background-color: #f4f4f4;
 }
 
+/* Title styling */
+h1, p {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
 
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Input field styling */
+textarea {
+  width: 70%;
+  height: 150px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+}
+
+/* File upload button styling */
+#imageIpnut {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* QR code position and size input styling */
+#qrDetail {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#qrDetail label {
+  margin-right: 10px;
+}
+
+#qrDetail input {
+  width: 50px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* Preview area styling */
 #mainCanvas {
-  border: 1px solid black;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  overflow: auto;
   width: 300px;
+  height: 400px;
+
 }
 
+/* Download button styling */
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
