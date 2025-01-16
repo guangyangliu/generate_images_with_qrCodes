@@ -1,4 +1,5 @@
 # QR Code Image Generator
+[QR Code Image Generator Website](https://guangyangliu.github.io/image-with-qr-code-generator/)
 
 This project enables you to generate **QR code images** from an image and any number of **landing page URLs**.
 
@@ -7,7 +8,7 @@ It’s perfect for creating **trackable flyers** or **posters** for affiliates i
 **No more manually generating QR codes and placing them on images one by one**—this project automates and simplifies the entire process.
 
 ## How to Use:
-
+[Visit the QR Code Image Generator Website](https://guangyangliu.github.io/image-with-qr-code-generator/)
 1. **Upload an image**
 2. **Enter all URLs**
 3. **Set the position of the QR code**
