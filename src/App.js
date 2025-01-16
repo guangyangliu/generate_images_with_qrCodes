@@ -1,4 +1,4 @@
-import React, { use, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import './App.css';
 
@@ -14,43 +14,55 @@ function UrlUpload({handleUrl, urls}) {
   type="text"
   placeholder="Enter URLs"
   value={urls}
-  onChange={(e) => handleUrl(e)}
+  onChange={handleUrl}
   rows = "10"
 />
 }
 
+function QrDetail({qrDetail,handleQrDetail}) {
+  return <form> 
+    <label>X: <input id="x" type="number" value={qrDetail.x} onChange={handleQrDetail}></input></label>
+    <label>Y: <input id="y" type="number" value={qrDetail.y} onChange={handleQrDetail}></input></label>
+    <label>size: <input id="size" type="number" value={qrDetail.size} onChange={handleQrDetail}></input></label>
+  </form>
+}
+
 //take an imageSrc show an image with qrcode on it.
 function Canvas({imageSrc, mainCanvas}) {
-  
-  
   useEffect(()=> {
     if (mainCanvas.current && imageSrc) {
-      let img = new Image();
-      img.src = imageSrc;
-      img.onload = ()=> {
-      const canvasContext = mainCanvas.current.getContext('2d');
-      mainCanvas.current.width = img.width;
-      mainCanvas.current.height = img.height;
-      canvasContext.drawImage(img, 0, 0, img.width, img.height);
-    }
+    drawMainCanvas(mainCanvas,imageSrc)
     }
   },[imageSrc]);
   return <canvas ref={mainCanvas} id="mainCanvas" width = '300' height= '300'> </canvas>
 }
 
-function DemoQr({urls, mainCanvas}) {
+function drawMainCanvas(mainCanvas, imageSrc) {
+    let img = new Image();
+    img.src = imageSrc;
+    img.onload = ()=> {
+    const canvasContext = mainCanvas.current.getContext('2d');
+    mainCanvas.current.width = img.width;
+    mainCanvas.current.height = img.height;
+    canvasContext.drawImage(img, 0, 0, img.width, img.height);
+  }
+}
+
+function QrCode({urls, mainCanvas, qrDetail, imageSrc}) {
   const qrCodeCanvas = useRef(null);
   useEffect(() => {
     if(mainCanvas.current && urls) {
+      const mainContext = mainCanvas.current.getContext('2d');
+      mainContext.clearRect(0, 0, mainCanvas.current.width, mainCanvas.current.height);
+      drawMainCanvas(mainCanvas, imageSrc);
       const qrCodeImage = new Image();
       qrCodeImage.src = qrCodeCanvas.current.toDataURL('image/png');
       qrCodeImage.onload = () => {
-        const mainContext = mainCanvas.current.getContext('2d');
-        mainContext.drawImage(qrCodeImage, 50, 50, qrCodeImage.width, qrCodeImage.height);
+        mainContext.drawImage(qrCodeImage, qrDetail.x, qrDetail.y, qrDetail.size, qrDetail.size);
       }
       
     }
-  }, [urls, mainCanvas]);
+  }, [urls, mainCanvas, qrDetail]);
   const urlsArray = urls.split('\n');
   return <QRCodeCanvas ref={qrCodeCanvas} value={urlsArray[0]} style={{display: 'none'}} />
 }
@@ -70,11 +82,11 @@ function QrCodes({urls}) {
   )
 }
 
-
-
 const App = () => {
   const[imageSrc, setImageSrc] = useState('');
   const[urls, setUrls] = useState('');
+  const[qrDetail, setQrDetail] = useState({x:0, y:0, size: 50});
+  console.log(qrDetail);
   const mainCanvas = useRef(null);
   //const [qrCodePosition, setQrCodePosition] = useState({x:0, y:0, width:100, height:100});
 
@@ -90,7 +102,12 @@ const App = () => {
     setUrls(e.target.value);
   }
 
-  
+  function handleQrDetail(e) {
+    const target = e.target;
+    const id = target.id;
+    const value = target.value;
+    setQrDetail({...qrDetail, [id]: parseInt(value,10)})
+  }
 
 
   function handleDownload() {
@@ -135,7 +152,6 @@ const App = () => {
     }
   }
 
-
   
 
   return (
@@ -145,9 +161,10 @@ const App = () => {
       <br />
       <UrlUpload handleUrl={handleUrl} url={urls}/>
       <br />
+      <QrDetail handleQrDetail={handleQrDetail} qrDetail={qrDetail}/>
       <Canvas imageSrc={imageSrc} mainCanvas={mainCanvas}/>
       <br />
-      <DemoQr urls={urls}  mainCanvas={mainCanvas}/>
+      <QrCode urls={urls}  mainCanvas={mainCanvas} qrDetail={qrDetail} imageSrc={imageSrc}/>
       <QrCodes urls={urls} />
       <br />
       <button onClick={handleDownload}>
