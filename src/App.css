@@ -29,12 +29,11 @@ h1, p {
 /* Input field styling */
 textarea {
   width: 70%;
-  height: 150px;
+  height: 100px;
   padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  resize: vertical;
 }
 
 /* File upload button styling */
@@ -60,7 +59,7 @@ textarea {
 }
 
 #qrDetail input {
-  width: 50px;
+  width: 100px;
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 3px;
@@ -73,9 +72,6 @@ textarea {
   margin-bottom: 20px;
   padding: 10px;
   overflow: auto;
-  width: 300px;
-  height: 400px;
-
 }
 
 /* Download button styling */

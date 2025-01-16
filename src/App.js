@@ -4,7 +4,7 @@ import './App.css';
 
 //Component to upload an image(flyer, poster).
 function ImageUpload({handleImage}) {
-  return <label id="imageInput">Upload a image: 
+  return <label id="imageInput">Upload an Image: 
     <input id='imageInput' type="file" accept="image/*" onChange={handleImage}/>
   </label>
 }
@@ -13,7 +13,7 @@ function ImageUpload({handleImage}) {
 function UrlUpload({handleUrl, urls}) {
   return <textarea
   type="text"
-  placeholder="Enter URLs，one per line."
+  placeholder="Please enter all URLs (one per line) to generate QR codes."
   value={urls}
   onChange={handleUrl}
 />
@@ -22,7 +22,7 @@ function UrlUpload({handleUrl, urls}) {
 // Component to edit QR code details like position and size
 function QrDetail({qrDetail,handleQrDetail}) {
   return <div>
-    <p>Edit Qr Code Position and Size:</p>
+    <p>Click on the canvas or edit directly to move the Qr code.</p>
   <form id="qrDetail"> 
     <label>X: <input id="x" type="number" value={qrDetail.x} onChange={handleQrDetail}></input></label>
     <label>Y: <input id="y" type="number" value={qrDetail.y} onChange={handleQrDetail}></input></label>
@@ -110,8 +110,8 @@ const App = () => {
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
     const pos = {
-      x: (e.clientX - rect.left)*scaleX,
-      y: (e.clientY - rect.top)*scaleY
+      x: Math.floor((e.clientX - rect.left)*scaleX),
+      y: Math.floor((e.clientY - rect.top)*scaleY)
     };
     setQrDetail({...qrDetail, x: pos.x, y: pos.y});
   }
@@ -163,8 +163,7 @@ const App = () => {
   return (
     <>
       <div id="intro">
-      <h1>Generate Images with QR Codes from URLs</h1>
-      <p>Upload an image and multiple URLs. Click on the canvas or edit the position and size to move the QR code. Click the download button.</p>
+      <h1>Generate QR Code Images from URLs</h1>
       </div>
       <ImageUpload handleImage={handleImage} />
       <UrlUpload handleUrl={handleUrl} url={urls}/>
@@ -172,7 +171,7 @@ const App = () => {
       <Canvas imageSrc={imageSrc} urls={urls} qrDetail={qrDetail} handleQrPosition={handleQrPosition}/>
       <QrCodes urls={urls} />
       <button onClick={handleDownload}>
-        Download Image with QR Code
+      Download QR Code Images
       </button>
     </>
   );
