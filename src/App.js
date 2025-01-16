@@ -69,7 +69,7 @@ function QrCodes({urls}) {
     <ul style={{display: "none"}}>
       {urlsArray.map((url, index) => (
         <li key={index} className="qrCanvas">
-          <QRCodeCanvas value={url}/>
+          <QRCodeCanvas value={url} urltext={url}/>
         </li>)
 )}
     </ul>
@@ -115,32 +115,33 @@ const App = () => {
 
       const qrCode = new Image();
       qrCode.src = allQrCodeCanvas[0].toDataURL('image/png');
+      const urlText = allQrCodeCanvas[0].getAttribute('urltext');
       mainContext.drawImage(qrCode, qrDetail.x, qrDetail.y, qrDetail.size, qrDetail.size);
-      results.push(mainCanvas.toDataURL('image/png'));
-    }
+      results.push({urlText: urlText, imageUrl: mainCanvas.toDataURL('image/png')});
 
+    }
     downloadImages(results);
   };
 
 
-  async function downloadImages(urls) {
-    for (const url of urls) {
+  async function downloadImages(results) {
+    for (const result of results) {
       try {
-        const response = await fetch(url);
+        const response = await fetch(result.imageUrl);
         const blob = await response.blob();
   
         const urlObject = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = urlObject;
-        link.download = url.split('/').pop(); // Extract filename from URL
+        link.download = result.urlText.split('/').pop(); // Extract filename from URL
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link); 
       } catch (error) {
-        console.error(`Error downloading ${url}:`, error);
+        console.error(`Error downloading ${result.imageUrl}:`, error);
       }
     }
-  }
+  };
 
   return (
     <div>
