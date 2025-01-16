@@ -84,7 +84,7 @@ function QrCodes({urls}) {
 const App = () => {
   const[imageSrc, setImageSrc] = useState('');
   const[urls, setUrls] = useState('');
-  const[qrDetail, setQrDetail] = useState({x:0, y:0, size: 100});
+  const[qrDetail, setQrDetail] = useState({x:0, y:0, size: 200});
 
   function handleImage(e) {
     let file = e.target.files[0];
@@ -137,23 +137,6 @@ const App = () => {
         downloadImages(results);
       }
     }})
-
-
-    /*
-    for (let i = 0; i < allQrCodeCanvas.length; i++) {
-      const mainCanvas = document.createElement('canvas');
-      mainCanvas.width = image.width;
-      mainCanvas.height = image.height;
-      const mainContext = mainCanvas.getContext('2d');
-      mainContext.drawImage(image, 0, 0, image.width, image.height);
-
-      const qrCode = new Image();
-      qrCode.src = allQrCodeCanvas[i].toDataURL('image/png');
-      const urlText = allQrCodeCanvas[i].getAttribute('urltext');
-      mainContext.drawImage(qrCode, qrDetail.x, qrDetail.y, qrDetail.size, qrDetail.size);
-      results.push({urlText: urlText, imageUrl: mainCanvas.toDataURL('image/png')});
-
-    }*/
     
   };
 
@@ -180,8 +163,8 @@ const App = () => {
   return (
     <>
       <div id="intro">
-      <h1>Generate Images with QrCodes from URLs</h1>
-      <p>Given an image and many URLs, generate same images with different qr codes.</p>
+      <h1>Generate Images with QR Codes from URLs</h1>
+      <p>Upload an image and multiple URLs. Click on the canvas or edit the position and size to move the QR code. Click the download button.</p>
       </div>
       <ImageUpload handleImage={handleImage} />
       <UrlUpload handleUrl={handleUrl} url={urls}/>
