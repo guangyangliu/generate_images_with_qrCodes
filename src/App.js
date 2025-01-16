@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import './App.css';
 
-
 //upload image and show it.
 function ImageUpload({handleImage}) {
   return <input id='imageInput' type="file" accept="image/*" onChange={handleImage} />
@@ -16,6 +15,7 @@ function UrlUpload({handleUrl, urls}) {
   value={urls}
   onChange={handleUrl}
   rows = "10"
+  cols="80"
 />
 }
 
@@ -28,7 +28,7 @@ function QrDetail({qrDetail,handleQrDetail}) {
 }
 
 //take an imageSrc show an image with qrcode on it.
-function Canvas({imageSrc, urls, qrDetail}) {
+function Canvas({imageSrc, urls, qrDetail, handleQrPosition}) {
   const mainCanvas = useRef(null);
   const qrCodeCanvas = useRef(null);
   const urlsArray = urls.split('\n');
@@ -56,7 +56,7 @@ function Canvas({imageSrc, urls, qrDetail}) {
   },[imageSrc, urls, qrDetail]);
 
   return <>
-  <canvas ref={mainCanvas} id="mainCanvas" width = '300' height= '300'> </canvas>
+  <canvas ref={mainCanvas} id="mainCanvas" width = '300' height= '300' onClick={handleQrPosition}> </canvas>
   <QRCodeCanvas ref={qrCodeCanvas} value={urlsArray[0]} style={{display: 'none'}} />
   </>
 }
@@ -79,7 +79,7 @@ function QrCodes({urls}) {
 const App = () => {
   const[imageSrc, setImageSrc] = useState('');
   const[urls, setUrls] = useState('');
-  const[qrDetail, setQrDetail] = useState({x:0, y:0, size: 50});
+  const[qrDetail, setQrDetail] = useState({x:0, y:0, size: 100});
 
   function handleImage() {
     let imageInput = document.getElementById('imageInput');
@@ -100,6 +100,19 @@ const App = () => {
     setQrDetail({...qrDetail, [id]: parseInt(value,10)})
   }
 
+  function handleQrPosition(evt) {
+    const canvas = evt.target;
+    var rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    const pos = {
+      x: (evt.clientX - rect.left)*scaleX,
+      y: (evt.clientY - rect.top)*scaleY
+    };
+    setQrDetail({...qrDetail, x: pos.x, y: pos.y});
+  }
+
 
   function handleDownload() {
     const results = [];
@@ -114,8 +127,8 @@ const App = () => {
       mainContext.drawImage(image, 0, 0, image.width, image.height);
 
       const qrCode = new Image();
-      qrCode.src = allQrCodeCanvas[0].toDataURL('image/png');
-      const urlText = allQrCodeCanvas[0].getAttribute('urltext');
+      qrCode.src = allQrCodeCanvas[i].toDataURL('image/png');
+      const urlText = allQrCodeCanvas[i].getAttribute('urltext');
       mainContext.drawImage(qrCode, qrDetail.x, qrDetail.y, qrDetail.size, qrDetail.size);
       results.push({urlText: urlText, imageUrl: mainCanvas.toDataURL('image/png')});
 
@@ -133,7 +146,8 @@ const App = () => {
         const urlObject = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = urlObject;
-        link.download = result.urlText.split('/').pop(); // Extract filename from URL
+        let filename = result.urlText.replace(/[^a-zA-Z0-9_-]/g, '_').replace(/^_+|_+$/g, '');
+        link.download = filename.length > 255 ? filename.substring(0, 255) : filename;; // Extract filename from URL
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link); 
@@ -151,7 +165,7 @@ const App = () => {
       <UrlUpload handleUrl={handleUrl} url={urls}/>
       <br />
       <QrDetail handleQrDetail={handleQrDetail} qrDetail={qrDetail}/>
-      <Canvas imageSrc={imageSrc} urls={urls} qrDetail={qrDetail}/>
+      <Canvas imageSrc={imageSrc} urls={urls} qrDetail={qrDetail} handleQrPosition={handleQrPosition}/>
       <br />
       <QrCodes urls={urls} />
       <br />
