@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/image-with-qr-code-generator/static/css/main.4281f794.css",
-    "main.js": "/image-with-qr-code-generator/static/js/main.f56ed5ea.js",
-    "static/js/488.e75445ad.chunk.js": "/image-with-qr-code-generator/static/js/488.e75445ad.chunk.js",
-    "index.html": "/image-with-qr-code-generator/index.html",
-    "main.4281f794.css.map": "/image-with-qr-code-generator/static/css/main.4281f794.css.map",
-    "main.f56ed5ea.js.map": "/image-with-qr-code-generator/static/js/main.f56ed5ea.js.map",
-    "488.e75445ad.chunk.js.map": "/image-with-qr-code-generator/static/js/488.e75445ad.chunk.js.map"
+    "main.css": "/qrcode-image-generator/static/css/main.4281f794.css",
+    "main.js": "/qrcode-image-generator/static/js/main.42878ba2.js",
+    "static/js/488.e75445ad.chunk.js": "/qrcode-image-generator/static/js/488.e75445ad.chunk.js",
+    "index.html": "/qrcode-image-generator/index.html",
+    "main.4281f794.css.map": "/qrcode-image-generator/static/css/main.4281f794.css.map",
+    "main.42878ba2.js.map": "/qrcode-image-generator/static/js/main.42878ba2.js.map",
+    "488.e75445ad.chunk.js.map": "/qrcode-image-generator/static/js/488.e75445ad.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4281f794.css",
-    "static/js/main.f56ed5ea.js"
+    "static/js/main.42878ba2.js"
   ]
 }
