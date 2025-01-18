@@ -19,7 +19,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://guangyangliu.github.io/image-with-qr-code-generator",
+  "homepage": "https://guangyangliu.github.io/qrcode-image-generator",
   "eslintConfig": {
     "extends": [
       "react-app",
